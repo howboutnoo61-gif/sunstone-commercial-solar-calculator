@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Illustrative calculator for comparing Sunstone commercial solar loan payments, dealer fees, special payments, and total financing cost.">
+  <meta name="description" content="Nextgen Solar commercial financing calculator for comparing loan payments, dealer fees, special payments, and total financing cost.">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#0d6651">
-  <title>Sunstone Commercial Solar Loan Calculator</title>
+  <title>Nextgen Solar Commercial Financing</title>
   <style>
     :root {
       color-scheme: light;
@@ -339,7 +339,7 @@
   <header class="hero">
     <div class="hero-inner">
       <p class="eyebrow">Commercial solar financing</p>
-      <h1>Sunstone loan payment calculator</h1>
+      <h1>Nextgen Solar commercial financing</h1>
       <p class="subtitle">Compare current partner-account rates, dealer fees, monthly payments, special payments, balloon balances, and total financing cost.</p>
     </div>
   </header>
@@ -494,21 +494,21 @@
         <h2>How the calculator works</h2>
         <ul>
           <li>The project price is treated as the net amount the installer must receive.</li>
-          <li>The gross loan is increased so the project price remains after Sunstone deducts its dealer fee.</li>
+          <li>The gross loan is increased so the project price remains after the financing provider deducts its dealer fee.</li>
           <li>Special-loan monthly payments assume the selected principal payment is made in month 18.</li>
-          <li>The estimated ITC is calculated from project price, while Sunstone's special payment is calculated from the larger gross loan.</li>
+          <li>The estimated ITC is calculated from project price, while the required special payment is calculated from the larger gross loan.</li>
           <li>Total paid includes scheduled monthly payments, the month-18 payment, and any maturity balloon.</li>
         </ul>
       </section>
       <section class="panel">
         <h2>Important limitations</h2>
-        <p>Sunstone's portal requires a loan amount greater than $50,000. Smaller examples are illustrative only.</p>
+        <p>The financing program requires a loan amount greater than $50,000. Smaller examples are illustrative only.</p>
         <p>Rates and dealer fees are from the partner calculator as of August 6, 2026. They may change and are not a commitment to lend.</p>
         <p>Tax credits depend on eligibility, tax basis, placed-in-service timing, and applicable law. This calculator is not tax, legal, or financial advice.</p>
       </section>
     </div>
 
-    <footer>Prepared as an illustrative commercial solar financing tool. Verify current terms directly with Sunstone Credit.</footer>
+    <footer>Prepared as an illustrative Nextgen Solar commercial financing tool. Verify current lender terms before relying on any calculation.</footer>
   </main>
 
   <script>
@@ -683,10 +683,10 @@
           const minimumNetProject = 50000 * (1 - state.option.fee);
           const minimumKw = state.pricePerWatt > 0 ? minimumNetProject / (state.pricePerWatt * 1000) : 0;
           elements.minimumStatus.className = "status warning";
-          elements.minimumStatus.innerHTML = `<span class="status-mark">!</span><span><strong>Illustration only.</strong> The calculated loan is ${currency(shortfall)} below Sunstone's $50,000 minimum. At this dealer fee and price per watt, net project cost would need to be about ${currency(minimumNetProject)}, or ${minimumKw.toFixed(1)} kW.</span>`;
+          elements.minimumStatus.innerHTML = `<span class="status-mark">!</span><span><strong>Illustration only.</strong> The calculated loan is ${currency(shortfall)} below the financing program's $50,000 minimum. At this dealer fee and price per watt, net project cost would need to be about ${currency(minimumNetProject)}, or ${minimumKw.toFixed(1)} kW.</span>`;
         } else {
           elements.minimumStatus.className = "status ok";
-          elements.minimumStatus.innerHTML = `<span class="status-mark">✓</span><span>The calculated loan exceeds Sunstone's stated $50,000 minimum.</span>`;
+          elements.minimumStatus.innerHTML = `<span class="status-mark">✓</span><span>The calculated loan exceeds the financing program's stated $50,000 minimum.</span>`;
         }
 
         renderComparison(state);
@@ -697,7 +697,7 @@
         const state = window.currentCalculatorState || getState();
         const result = state.result;
         const lines = [
-          "Sunstone commercial solar financing illustration",
+          "Nextgen Solar commercial financing illustration",
           `System: ${state.systemSize.toFixed(1)} kW at ${currency(state.pricePerWatt)} per watt`,
           `Project price / installer proceeds: ${currency(state.projectPrice)}`,
           `Loan: ${state.type === "special" ? "Special payment" : "Standard"}, ${termData[state.termKey].label}`,
@@ -714,7 +714,7 @@
           lines.push(`Estimated ITC: ${currency(state.estimatedItc)}`);
           lines.push(`${state.itcGap > 0 ? "Additional cash needed for special payment" : "Estimated ITC remaining after special payment"}: ${currency(Math.abs(state.itcGap))}`);
         }
-        lines.push("Illustrative only. Verify current terms with Sunstone Credit and tax assumptions with a qualified adviser.");
+        lines.push("Illustrative only. Verify current lender terms and tax assumptions with a qualified adviser.");
         return lines.join("\n");
       }
 
