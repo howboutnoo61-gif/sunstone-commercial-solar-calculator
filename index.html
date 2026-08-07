@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Illustrative calculator for comparing Sunstone commercial solar loan payments, dealer fees, special payments, and total financing cost.">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#0d6651">
+  <title>Sunstone Commercial Solar Loan Calculator</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18302b;
+      --muted: #5d6f69;
+      --green: #0d6651;
+      --green-dark: #08483a;
+      --green-soft: #e8f4ef;
+      --blue: #1265a8;
+      --blue-soft: #eaf3fb;
+      --gold: #c58b1b;
+      --gold-soft: #fff7df;
+      --red: #a4332f;
+      --red-soft: #fff0ef;
+      --line: #d6e0dc;
+      --surface: #ffffff;
+      --page: #f4f7f6;
+      --shadow: 0 16px 42px rgba(19, 54, 46, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--page); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 80% 0%, rgba(13, 102, 81, 0.10), transparent 34rem),
+        var(--page);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    button, input, select { font: inherit; }
+    button, select, input { min-height: 42px; }
+
+    .hero {
+      color: #fff;
+      background: linear-gradient(120deg, var(--green-dark), var(--green));
+      border-bottom: 5px solid #82c8aa;
+    }
+
+    .hero-inner, main {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .hero-inner { padding: 34px 0 30px; }
+    .eyebrow {
+      margin: 0 0 7px;
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.78;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 850px;
+      font-size: clamp(1.65rem, 4vw, 2.75rem);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    .subtitle {
+      max-width: 790px;
+      margin: 13px 0 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 1rem;
+    }
+
+    main { padding: 30px 0 52px; }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 0.82fr) minmax(420px, 1.35fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      padding: 21px 22px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h2, .section-title {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+    }
+
+    .panel-head p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .controls { padding: 20px 22px 23px; }
+    .control-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 750;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 9px 11px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid #b9c9c3;
+      border-radius: 9px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(18, 101, 168, 0.15);
+    }
+
+    input:disabled, select:disabled {
+      color: #7b8884;
+      background: #eef2f0;
+      cursor: not-allowed;
+    }
+
+    .editable input, .editable select { color: #0645c0; font-weight: 700; }
+    .field-note {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.71rem;
+    }
+
+    .project-price {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      grid-column: 1 / -1;
+      padding: 13px 14px;
+      background: var(--green-soft);
+      border-radius: 10px;
+    }
+
+    .project-price span { color: var(--muted); font-size: 0.8rem; }
+    .project-price strong { font-size: 1.08rem; }
+
+    .results { padding: 20px 22px 22px; }
+    .status {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+      padding: 12px 13px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+    }
+
+    .status.warning { color: #75530b; background: var(--gold-soft); border: 1px solid #efd591; }
+    .status.ok { color: var(--green-dark); background: var(--green-soft); border: 1px solid #b9dfcf; }
+    .status-mark { font-weight: 900; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .metric {
+      min-width: 0;
+      padding: 14px;
+      background: #fafcfb;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .metric.primary {
+      color: #fff;
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .metric-label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 0.71rem;
+      font-weight: 750;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .metric.primary .metric-label { color: rgba(255,255,255,0.72); }
+    .metric-value {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: clamp(1.05rem, 2.5vw, 1.42rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-sub {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .metric.primary .metric-sub { color: rgba(255,255,255,0.72); }
+
+    .itc-box {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 14px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .itc-item { padding: 12px 14px; }
+    .itc-item + .itc-item { border-left: 1px solid var(--line); }
+    .itc-item span { display: block; color: var(--muted); font-size: 0.71rem; }
+    .itc-item strong { display: block; margin-top: 3px; font-size: 0.98rem; }
+    .itc-item.gap.negative { color: var(--red); background: var(--red-soft); }
+    .itc-item.gap.positive { color: var(--green); background: var(--green-soft); }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 17px;
+    }
+
+    .btn {
+      padding: 9px 13px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid #afc0ba;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .btn:hover { background: #f4f8f6; }
+    .btn.primary { color: #fff; background: var(--green); border-color: var(--green); }
+    .btn.primary:hover { background: var(--green-dark); }
+    .copy-state { align-self: center; color: var(--green); font-size: 0.78rem; font-weight: 750; }
+
+    .comparison { margin-top: 22px; overflow: hidden; }
+    .comparison .panel-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+    }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.79rem; }
+    th, td { padding: 11px 12px; text-align: right; border-bottom: 1px solid #e4ebe8; white-space: nowrap; }
+    th { color: var(--muted); background: #f8faf9; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.035em; }
+    th:first-child, td:first-child { text-align: left; }
+    tbody tr { cursor: pointer; }
+    tbody tr:hover { background: #f3f8f6; }
+    tbody tr.selected { background: var(--blue-soft); box-shadow: inset 4px 0 0 var(--blue); }
+    tbody tr:last-child td { border-bottom: 0; }
+
+    .notes {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .notes .panel { padding: 19px 21px; box-shadow: none; }
+    .notes h2 { margin: 0 0 9px; color: var(--ink); font-size: 0.92rem; }
+    .notes p { margin: 7px 0; }
+    .notes ul { margin: 8px 0 0; padding-left: 19px; }
+    .notes li + li { margin-top: 5px; }
+    footer { margin-top: 20px; text-align: center; color: var(--muted); font-size: 0.7rem; }
+
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .notes { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 540px) {
+      .hero-inner, main { width: min(100% - 22px, 1180px); }
+      .hero-inner { padding: 27px 0 24px; }
+      main { padding-top: 18px; }
+      .control-grid, .metrics { grid-template-columns: 1fr; }
+      .field.full, .project-price { grid-column: auto; }
+      .itc-box { grid-template-columns: 1fr; }
+      .itc-item + .itc-item { border-left: 0; border-top: 1px solid var(--line); }
+      .comparison .panel-head { display: block; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .hero { color: #000; background: #fff; border-bottom: 2px solid #000; }
+      .subtitle { color: #333; }
+      .panel { box-shadow: none; break-inside: avoid; }
+      .actions { display: none; }
+      .layout { grid-template-columns: 0.85fr 1.15fr; }
+      main, .hero-inner { width: 100%; }
+      main { padding: 18px 0; }
+      .comparison { break-before: page; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Commercial solar financing</p>
+      <h1>Sunstone loan payment calculator</h1>
+      <p class="subtitle">Compare current partner-account rates, dealer fees, monthly payments, special payments, balloon balances, and total financing cost.</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="layout">
+      <section class="panel" aria-labelledby="inputs-title">
+        <div class="panel-head">
+          <h2 id="inputs-title">Project and loan inputs</h2>
+          <p>Blue values are editable.</p>
+        </div>
+        <div class="controls">
+          <div class="control-grid">
+            <div class="field editable">
+              <label for="systemSize">System size (kW)</label>
+              <input id="systemSize" type="number" min="0.1" step="0.1" value="10">
+            </div>
+            <div class="field editable">
+              <label for="pricePerWatt">Installed price ($/W)</label>
+              <input id="pricePerWatt" type="number" min="0.01" step="0.01" value="3.00">
+            </div>
+            <div class="project-price">
+              <span>Project price and required installer proceeds</span>
+              <strong id="projectPrice">$30,000.00</strong>
+            </div>
+            <div class="field full editable">
+              <label for="loanType">Loan type</label>
+              <select id="loanType">
+                <option value="standard">Standard loan</option>
+                <option value="special" selected>Special-payment loan</option>
+              </select>
+            </div>
+            <div class="field full editable">
+              <label for="term">Term / amortization</label>
+              <select id="term"></select>
+            </div>
+            <div class="field full editable">
+              <label for="rateOption">Interest rate / dealer fee</label>
+              <select id="rateOption"></select>
+            </div>
+            <div class="field editable">
+              <label for="specialPercent">Month-18 special payment</label>
+              <select id="specialPercent">
+                <option value="0.20">20%</option>
+                <option value="0.30" selected>30%</option>
+                <option value="0.40">40%</option>
+                <option value="0.50">50%</option>
+              </select>
+            </div>
+            <div class="field editable">
+              <label for="itcPercent">Estimated ITC on project cost</label>
+              <input id="itcPercent" type="number" min="0" max="100" step="1" value="30">
+              <span class="field-note">User assumption only, confirm tax eligibility separately.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="results-title">
+        <div class="panel-head">
+          <h2 id="results-title">Selected option</h2>
+          <p id="selectionLabel">Special-payment loan</p>
+        </div>
+        <div class="results">
+          <div id="minimumStatus" class="status warning" role="status"></div>
+          <div class="metrics">
+            <div class="metric primary">
+              <span class="metric-label">Monthly payment</span>
+              <strong class="metric-value" id="monthlyPayment">$0.00</strong>
+              <span class="metric-sub" id="monthlyContext">Fixed scheduled payment</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Gross loan amount</span>
+              <strong class="metric-value" id="loanAmount">$0.00</strong>
+              <span class="metric-sub">Includes dealer-fee gross-up</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Dealer fee</span>
+              <strong class="metric-value" id="dealerFeeAmount">$0.00</strong>
+              <span class="metric-sub" id="dealerFeeRate">0.00% of loan</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Month-18 payment</span>
+              <strong class="metric-value" id="specialPayment">$0.00</strong>
+              <span class="metric-sub" id="specialContext">Not applicable</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Maturity balloon</span>
+              <strong class="metric-value" id="balloonPayment">$0.00</strong>
+              <span class="metric-sub">Applies to 10-year / 20-year option</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Total scheduled paid</span>
+              <strong class="metric-value" id="totalPaid">$0.00</strong>
+              <span class="metric-sub" id="financingCost">$0 above project price</span>
+            </div>
+          </div>
+
+          <div class="itc-box" id="itcBox">
+            <div class="itc-item">
+              <span>Estimated ITC</span>
+              <strong id="estimatedItc">$0.00</strong>
+            </div>
+            <div class="itc-item">
+              <span>Required special payment</span>
+              <strong id="requiredSpecial">$0.00</strong>
+            </div>
+            <div class="itc-item gap" id="itcGapBox">
+              <span id="itcGapLabel">Additional cash required</span>
+              <strong id="itcGap">$0.00</strong>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="copySummary" type="button">Copy email summary</button>
+            <button class="btn" id="printCalculator" type="button">Print or save PDF</button>
+            <span class="copy-state" id="copyState" aria-live="polite"></span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel comparison" aria-labelledby="comparison-title">
+      <div class="panel-head">
+        <div>
+          <h2 id="comparison-title">Compare rates for this term</h2>
+          <p>Click a row to select it.</p>
+        </div>
+        <p id="comparisonCaption"></p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Rate</th>
+              <th>Dealer fee</th>
+              <th>Loan amount</th>
+              <th>Monthly</th>
+              <th>Month 18</th>
+              <th>Balloon</th>
+              <th>Total paid</th>
+              <th>Effective $/W</th>
+            </tr>
+          </thead>
+          <tbody id="comparisonBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="notes">
+      <section class="panel">
+        <h2>How the calculator works</h2>
+        <ul>
+          <li>The project price is treated as the net amount the installer must receive.</li>
+          <li>The gross loan is increased so the project price remains after Sunstone deducts its dealer fee.</li>
+          <li>Special-loan monthly payments assume the selected principal payment is made in month 18.</li>
+          <li>The estimated ITC is calculated from project price, while Sunstone's special payment is calculated from the larger gross loan.</li>
+          <li>Total paid includes scheduled monthly payments, the month-18 payment, and any maturity balloon.</li>
+        </ul>
+      </section>
+      <section class="panel">
+        <h2>Important limitations</h2>
+        <p>Sunstone's portal requires a loan amount greater than $50,000. Smaller examples are illustrative only.</p>
+        <p>Rates and dealer fees are from the partner calculator as of August 6, 2026. They may change and are not a commitment to lend.</p>
+        <p>Tax credits depend on eligibility, tax basis, placed-in-service timing, and applicable law. This calculator is not tax, legal, or financial advice.</p>
+      </section>
+    </div>
+
+    <footer>Prepared as an illustrative commercial solar financing tool. Verify current terms directly with Sunstone Credit.</footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const termData = {
+        "5": { label: "5 years / 5-year amortization", termMonths: 60, amortMonths: 60 },
+        "7": { label: "7 years / 7-year amortization", termMonths: 84, amortMonths: 84 },
+        "8": { label: "8 years / 8-year amortization", termMonths: 96, amortMonths: 96 },
+        "10": { label: "10 years / 10-year amortization", termMonths: 120, amortMonths: 120 },
+        "10-20": { label: "10-year term / 20-year amortization", termMonths: 120, amortMonths: 240 },
+        "15": { label: "15 years / 15-year amortization", termMonths: 180, amortMonths: 180 },
+        "20": { label: "20 years / 20-year amortization", termMonths: 240, amortMonths: 240 }
+      };
+      const termOrder = ["5", "7", "8", "10", "10-20", "15", "20"];
+
+      const rates = {
+        standard: {
+          "5": [{ rate: 0, fee: 0.2575 }, { rate: 0.0475, fee: 0.1475 }, { rate: 0.0799, fee: 0.0725 }],
+          "7": [{ rate: 0, fee: 0.32 }],
+          "8": [{ rate: 0.0475, fee: 0.1825 }, { rate: 0.0833, fee: 0.0725 }],
+          "10": [{ rate: 0.0533, fee: 0.1875 }, { rate: 0.0849, fee: 0.075 }, { rate: 0.0999, fee: 0.0195 }],
+          "10-20": [{ rate: 0.0549, fee: 0.22 }, { rate: 0.0865, fee: 0.075 }, { rate: 0.0999, fee: 0.0195 }],
+          "15": [{ rate: 0.0549, fee: 0.22 }, { rate: 0.0865, fee: 0.0775 }],
+          "20": [{ rate: 0.0575, fee: 0.235 }, { rate: 0.0875, fee: 0.08 }, { rate: 0.0999, fee: 0.0195 }]
+        },
+        special: {
+          "5": [{ rate: 0, fee: 0.235 }, { rate: 0.0399, fee: 0.1475 }, { rate: 0.0775, fee: 0.0725 }],
+          "7": [{ rate: 0, fee: 0.28 }],
+          "8": [{ rate: 0.0415, fee: 0.18 }, { rate: 0.0825, fee: 0.0725 }],
+          "10": [{ rate: 0.0455, fee: 0.185 }, { rate: 0.0833, fee: 0.0725 }, { rate: 0.0999, fee: 0.0195 }],
+          "10-20": [{ rate: 0.0489, fee: 0.21 }, { rate: 0.0849, fee: 0.075 }, { rate: 0.0999, fee: 0.0195 }],
+          "15": [{ rate: 0.0499, fee: 0.21 }, { rate: 0.0855, fee: 0.0775 }],
+          "20": [{ rate: 0.0499, fee: 0.225 }, { rate: 0.0865, fee: 0.0775 }, { rate: 0.0999, fee: 0.0195 }]
+        }
+      };
+
+      const $ = id => document.getElementById(id);
+      const elements = {
+        systemSize: $("systemSize"), pricePerWatt: $("pricePerWatt"), loanType: $("loanType"),
+        term: $("term"), rateOption: $("rateOption"), specialPercent: $("specialPercent"),
+        itcPercent: $("itcPercent"), projectPrice: $("projectPrice"), minimumStatus: $("minimumStatus"),
+        selectionLabel: $("selectionLabel"), monthlyPayment: $("monthlyPayment"), loanAmount: $("loanAmount"),
+        dealerFeeAmount: $("dealerFeeAmount"), dealerFeeRate: $("dealerFeeRate"), specialPayment: $("specialPayment"),
+        specialContext: $("specialContext"), balloonPayment: $("balloonPayment"), totalPaid: $("totalPaid"),
+        financingCost: $("financingCost"), estimatedItc: $("estimatedItc"), requiredSpecial: $("requiredSpecial"),
+        itcGap: $("itcGap"), itcGapBox: $("itcGapBox"), itcGapLabel: $("itcGapLabel"), itcBox: $("itcBox"),
+        comparisonBody: $("comparisonBody"), comparisonCaption: $("comparisonCaption"), copySummary: $("copySummary"),
+        printCalculator: $("printCalculator"), copyState: $("copyState")
+      };
+
+      const currency = value => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format(value || 0);
+      const percent = value => `${(value * 100).toFixed(2)}%`;
+      const cleanNumber = (value, fallback = 0) => Number.isFinite(Number(value)) ? Math.max(0, Number(value)) : fallback;
+
+      function calculateOption(projectPrice, type, termKey, option, specialPercent) {
+        const spec = termData[termKey];
+        const loanAmount = projectPrice / (1 - option.fee);
+        const monthlyRate = option.rate / 12;
+        const specialPayment = type === "special" ? loanAmount * specialPercent : 0;
+        const presentValueSpecial = monthlyRate === 0
+          ? specialPayment
+          : specialPayment / Math.pow(1 + monthlyRate, 18);
+
+        const monthlyPayment = monthlyRate === 0
+          ? (loanAmount - specialPayment) / spec.amortMonths
+          : (loanAmount - presentValueSpecial) * monthlyRate / (1 - Math.pow(1 + monthlyRate, -spec.amortMonths));
+
+        let balloonPayment;
+        if (monthlyRate === 0) {
+          balloonPayment = loanAmount - (monthlyPayment * spec.termMonths) - specialPayment;
+        } else {
+          balloonPayment = loanAmount * Math.pow(1 + monthlyRate, spec.termMonths)
+            - monthlyPayment * ((Math.pow(1 + monthlyRate, spec.termMonths) - 1) / monthlyRate)
+            - specialPayment * Math.pow(1 + monthlyRate, spec.termMonths - 18);
+        }
+        if (Math.abs(balloonPayment) < 0.01) balloonPayment = 0;
+
+        const dealerFeeAmount = loanAmount * option.fee;
+        const totalPaid = monthlyPayment * spec.termMonths + specialPayment + balloonPayment;
+        return {
+          loanAmount, dealerFeeAmount, monthlyPayment, specialPayment, balloonPayment, totalPaid,
+          financingCost: totalPaid - projectPrice,
+          effectivePricePerWatt: projectPrice > 0 ? totalPaid / (cleanNumber(elements.systemSize.value, 1) * 1000) : 0
+        };
+      }
+
+      function populateTerms() {
+        const previous = elements.term.value || "10";
+        elements.term.innerHTML = termOrder
+          .map(key => `<option value="${key}">${termData[key].label}</option>`).join("");
+        elements.term.value = termData[previous] ? previous : "10";
+      }
+
+      function populateRates() {
+        const type = elements.loanType.value;
+        const termKey = elements.term.value;
+        const options = rates[type][termKey];
+        const previous = Number(elements.rateOption.value);
+        elements.rateOption.innerHTML = options.map((option, index) =>
+          `<option value="${index}">${percent(option.rate)} rate / ${percent(option.fee)} dealer fee</option>`
+        ).join("");
+        elements.rateOption.value = Number.isInteger(previous) && previous < options.length ? String(previous) : "0";
+        elements.specialPercent.disabled = type !== "special";
+      }
+
+      function getState(optionIndex = null) {
+        const systemSize = cleanNumber(elements.systemSize.value, 10);
+        const pricePerWatt = cleanNumber(elements.pricePerWatt.value, 3);
+        const projectPrice = systemSize * 1000 * pricePerWatt;
+        const type = elements.loanType.value;
+        const termKey = elements.term.value;
+        const selectedIndex = optionIndex === null ? Number(elements.rateOption.value) : optionIndex;
+        const option = rates[type][termKey][selectedIndex];
+        const specialPercent = type === "special" ? cleanNumber(elements.specialPercent.value, 0.30) : 0;
+        const result = calculateOption(projectPrice, type, termKey, option, specialPercent);
+        return { systemSize, pricePerWatt, projectPrice, type, termKey, selectedIndex, option, specialPercent, result };
+      }
+
+      function renderComparison(state) {
+        const options = rates[state.type][state.termKey];
+        elements.comparisonCaption.textContent = `${state.type === "special" ? "Special-payment" : "Standard"}, ${termData[state.termKey].label}`;
+        elements.comparisonBody.innerHTML = options.map((option, index) => {
+          const result = calculateOption(state.projectPrice, state.type, state.termKey, option, state.specialPercent);
+          return `<tr data-index="${index}" class="${index === state.selectedIndex ? "selected" : ""}" aria-label="Select ${percent(option.rate)} rate">
+            <td>${percent(option.rate)}</td>
+            <td>${percent(option.fee)}</td>
+            <td>${currency(result.loanAmount)}</td>
+            <td>${currency(result.monthlyPayment)}</td>
+            <td>${currency(result.specialPayment)}</td>
+            <td>${currency(result.balloonPayment)}</td>
+            <td>${currency(result.totalPaid)}</td>
+            <td>${currency(result.effectivePricePerWatt)}</td>
+          </tr>`;
+        }).join("");
+
+        elements.comparisonBody.querySelectorAll("tr").forEach(row => {
+          row.addEventListener("click", () => {
+            elements.rateOption.value = row.dataset.index;
+            render();
+          });
+        });
+      }
+
+      function render() {
+        const state = getState();
+        const { result } = state;
+        const estimatedItc = state.projectPrice * cleanNumber(elements.itcPercent.value, 30) / 100;
+        const itcGap = result.specialPayment - estimatedItc;
+
+        elements.projectPrice.textContent = currency(state.projectPrice);
+        elements.selectionLabel.textContent = `${state.type === "special" ? "Special-payment loan" : "Standard loan"}, ${termData[state.termKey].label}, ${percent(state.option.rate)}`;
+        elements.monthlyPayment.textContent = currency(result.monthlyPayment);
+        elements.loanAmount.textContent = currency(result.loanAmount);
+        elements.dealerFeeAmount.textContent = currency(result.dealerFeeAmount);
+        elements.dealerFeeRate.textContent = `${percent(state.option.fee)} of gross loan`;
+        elements.specialPayment.textContent = currency(result.specialPayment);
+        elements.specialContext.textContent = state.type === "special" ? `${(state.specialPercent * 100).toFixed(0)}% of gross loan, due month 18` : "Not applicable";
+        elements.balloonPayment.textContent = currency(result.balloonPayment);
+        elements.totalPaid.textContent = currency(result.totalPaid);
+        elements.financingCost.textContent = `${currency(result.financingCost)} above project price`;
+        elements.estimatedItc.textContent = currency(estimatedItc);
+        elements.requiredSpecial.textContent = currency(result.specialPayment);
+        elements.itcGap.textContent = currency(Math.abs(itcGap));
+        elements.itcGapLabel.textContent = itcGap > 0.005 ? "Additional cash required" : "Estimated ITC remaining";
+        elements.itcGapBox.className = `itc-item gap ${itcGap > 0.005 ? "negative" : "positive"}`;
+        elements.itcBox.style.display = state.type === "special" ? "grid" : "none";
+
+        if (result.loanAmount < 50000) {
+          const shortfall = 50000 - result.loanAmount;
+          const minimumNetProject = 50000 * (1 - state.option.fee);
+          const minimumKw = state.pricePerWatt > 0 ? minimumNetProject / (state.pricePerWatt * 1000) : 0;
+          elements.minimumStatus.className = "status warning";
+          elements.minimumStatus.innerHTML = `<span class="status-mark">!</span><span><strong>Illustration only.</strong> The calculated loan is ${currency(shortfall)} below Sunstone's $50,000 minimum. At this dealer fee and price per watt, net project cost would need to be about ${currency(minimumNetProject)}, or ${minimumKw.toFixed(1)} kW.</span>`;
+        } else {
+          elements.minimumStatus.className = "status ok";
+          elements.minimumStatus.innerHTML = `<span class="status-mark">✓</span><span>The calculated loan exceeds Sunstone's stated $50,000 minimum.</span>`;
+        }
+
+        renderComparison(state);
+        window.currentCalculatorState = { ...state, estimatedItc, itcGap };
+      }
+
+      function buildSummary() {
+        const state = window.currentCalculatorState || getState();
+        const result = state.result;
+        const lines = [
+          "Sunstone commercial solar financing illustration",
+          `System: ${state.systemSize.toFixed(1)} kW at ${currency(state.pricePerWatt)} per watt`,
+          `Project price / installer proceeds: ${currency(state.projectPrice)}`,
+          `Loan: ${state.type === "special" ? "Special payment" : "Standard"}, ${termData[state.termKey].label}`,
+          `Interest rate: ${percent(state.option.rate)}`,
+          `Dealer fee: ${percent(state.option.fee)}`,
+          `Gross loan amount: ${currency(result.loanAmount)}`,
+          `Monthly payment: ${currency(result.monthlyPayment)}`,
+          `Month-18 special payment: ${currency(result.specialPayment)}`,
+          `Maturity balloon: ${currency(result.balloonPayment)}`,
+          `Total scheduled paid: ${currency(result.totalPaid)}`,
+          `Financing cost above project price: ${currency(result.financingCost)}`
+        ];
+        if (state.type === "special") {
+          lines.push(`Estimated ITC: ${currency(state.estimatedItc)}`);
+          lines.push(`${state.itcGap > 0 ? "Additional cash needed for special payment" : "Estimated ITC remaining after special payment"}: ${currency(Math.abs(state.itcGap))}`);
+        }
+        lines.push("Illustrative only. Verify current terms with Sunstone Credit and tax assumptions with a qualified adviser.");
+        return lines.join("\n");
+      }
+
+      async function copySummary() {
+        const text = buildSummary();
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (error) {
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        }
+        elements.copyState.textContent = "Summary copied";
+        window.setTimeout(() => { elements.copyState.textContent = ""; }, 2200);
+      }
+
+      populateTerms();
+      elements.term.value = "10";
+      populateRates();
+      elements.rateOption.value = "0";
+
+      [elements.systemSize, elements.pricePerWatt, elements.rateOption, elements.specialPercent, elements.itcPercent]
+        .forEach(element => element.addEventListener("input", render));
+      elements.loanType.addEventListener("change", () => { populateRates(); render(); });
+      elements.term.addEventListener("change", () => { populateRates(); render(); });
+      elements.copySummary.addEventListener("click", copySummary);
+      elements.printCalculator.addEventListener("click", () => window.print());
+
+      window.calculatorTestHooks = { calculateOption, termData, rates, getState };
+      render();
+    })();
+  </script>
+</body>
+</html>
