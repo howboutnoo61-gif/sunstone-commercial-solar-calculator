@@ -1,6 +1,6 @@
-# Sunstone Commercial Solar Loan Calculator
+# Nextgen Solar Commercial Financing
 
-A standalone, dependency-free calculator for comparing commercial solar financing options from Sunstone Credit.
+A standalone, dependency-free calculator for comparing Nextgen Solar commercial financing options.
 
 ## What it calculates
 
@@ -22,4 +22,4 @@ The repository includes `netlify.toml`, so Netlify can deploy it directly from t
 
 ## Important limitation
 
-The rates and dealer fees in this calculator were obtained from Sunstone's partner calculator on August 6, 2026. They may change and are not a commitment to lend. Tax credits depend on eligibility and applicable law. This calculator is illustrative and is not tax, legal, or financial advice.
+The rates and dealer fees in this calculator were obtained from a financing partner portal on August 6, 2026. They may change and are not a commitment to lend. Tax credits depend on eligibility and applicable law. This calculator is illustrative and is not tax, legal, or financial advice.
