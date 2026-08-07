@@ -2,6 +2,8 @@
 
 A standalone, dependency-free calculator for comparing Nextgen Solar commercial financing options.
 
+[Open the live calculator](https://nextgen-solar-commercial-financing.netlify.app/)
+
 ## What it calculates
 
 - Gross loan amount after dealer-fee gross-up
